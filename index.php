@@ -18,7 +18,7 @@ else
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-  <title>首頁</title>
+  <title>plainB首頁</title>
   <link rel="stylesheet" href="css/core-style.css">
   <link rel="stylesheet" href="style.css">
   <script src="js/bootstrap.min.js"></script>
@@ -31,7 +31,7 @@ else
     <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
 
       <nav class="classy-navbar" id="essenceNav">
-        <a class="nav-brand" href="index.php"><img src="img/core-img/logo.png" alt=""></a>
+        <a class="nav-brand" href="index.php"><img src="img/core-img/logo_plainB.png" alt=""></a>
         <div class="classy-navbar-toggler">
           <span class="navbarToggler"><span></span><span></span><span></span></span>
         </div>
@@ -42,9 +42,6 @@ else
           <div class="classynav">
             <ul>
               <li><a href="index.php">首頁</a></li>
-              <li><a href="transaction.php">存/提款</a></li>
-              <li><a href="queryBalance.php">查詢餘額</a></li>
-              <li><a href="queryDetails.php">查詢明細</a></li>
             </ul>
           </div>
         </div>
