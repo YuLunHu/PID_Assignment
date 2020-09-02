@@ -45,7 +45,7 @@ if (isset($_POST["login"]))
   <link rel="stylesheet" href="css/core-style.css">
   <script src="js/jquery.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <title>登入</title>
+  <title>plain-B 會員登入</title>
 </head>
 
 <body>
@@ -74,7 +74,7 @@ if (isset($_POST["login"]))
   <div style="margin: 30px 8px 20px 6px;border-top:1px dotted #C0C0C0;"></div>
 
   <div class="col-md-12 text-center">
-    <h2>會員登入</h2>
+    <h2>plain-B 會員登入</h2>
   </div>
 
   <div class="col-md-12">
@@ -87,9 +87,10 @@ if (isset($_POST["login"]))
           <div class="form-title hidden-xs">密碼</div>
           <input type="password" name="userPassword" id="userPassword" tabindex="4" placeholder="請在此輸入密碼" required>
         </div>
-        <?php if ($row['userName'] != $UserName || $row['userPassword'] != $Password) { ?>
+        <?php if (isset($UserName) && isset($Password)) { ?>
+        <?php if (!($row['userName'] == $UserName) || !(password_verify($Password, $row['userPassword']))) { ?>
         <div style="color: red;">您輸入的帳號或密碼錯誤！</div>
-        <?php } ?>
+        <?php } }?>
         <button name="login" id="login" type="submit" class="plain-btn -login-btn" tabindex="5">登入</button>
       </form>
     </div>

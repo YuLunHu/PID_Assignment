@@ -1,5 +1,11 @@
 <?php 
 
+session_start();
+if (isset($_SESSION["nickName"])) { // 判斷登入與否
+  echo "<script> alert('請先登出！'); window.location='index.php' </script>";
+	exit();
+}
+
 if (isset($_POST["register"]))
 {
   $UserName = $_POST["userName"];
@@ -49,7 +55,7 @@ if (isset($_POST["register"]))
   <link rel="stylesheet" href="css/core-style.css">
   <script src="js/jquery.js"></script>
   <script src="js/bootstrap.min.js"></script>
-  <title>註冊</title>
+  <title>plain-B 會員註冊</title>
 </head>
 
 <body>
