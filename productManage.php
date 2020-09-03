@@ -122,47 +122,69 @@ else {
       </thead>
 
       <tbody id="productResult">
-        <tr>
-          <th scope="col" class="height-100">1</th>
-          <th scope="col">2</th>
-          <th scope="col">3</th>
-        </tr>
       </tbody>
 
     </table>
   </div>
 
-  <div id="akacodedog">尚未執行</div>
-
   <script>
 
     $(document).ready(function () {
-      $("#createProduct").on('click', function (e) {
-        let productName = $("#productName").val();
-        let unitPrice = $("#unitPrice").val();
-        let unitsInStock = $("#unitsInStock").val();
 
+      refreshProduct();
+
+      // -----------------------------------------------------------> 更新資料庫中目前的商品
+      function refreshProduct() {
         $.ajax({
-          type: 'post', // 請求方法
-          url: 'ajax.php', // 請求網址
+          type: 'GET', // 請求方法
+          url: 'refreshProduct.php', // 請求網址
           async: true, // 異步請求
           cache: false, // 停止瀏覽器緩存加載
-          dataType: 'html', // 返回資料類型
-          data: { // 傳送資料
-            "productName": productName,
-            "unitPrice": unitPrice,
-            "unitsInStock": unitsInStock
-          },
+          dataType: 'json', // 返回資料類型
+          
           beforeSend: function (jqXHR) { }, // 發送請求前執行
           success: function (data, textStatus, jqXHR) { }, // 成功後執行
           error: function (xhr, status, error) { }, // 失敗後執行
           complete: function (xhr, status, error) { }, // 完成後執行
         }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
-          // $('#akacodedog').html(data); // 把結果輸出到#akacodedog容器
+
+          var result = "";
+          for (var i = 0; i < data.length; i++) {
+            var ls = data[i];
+            result = "<tr>"+
+            '<th scope="col" class="height-100">' + ls.productName + "</th>" +
+            '<th scope="col">' + ls.unitPrice + "</th>" +
+            '<th scope="col">' + ls.unitsInStock + "</th>" + 
+            "</tr>";
+            $("#productResult").append(result);
+          }
+        });
+      }
+      
+      // ------------------------------------------------------------------> 新增一筆商品
+      $("#createProduct").on('click', function (e) { 
+        $.ajax({
+          type: 'POST', // 請求方法
+          url: 'ajax.php', // 請求網址
+          async: true, // 異步請求
+          cache: false, // 停止瀏覽器緩存加載
+          dataType: 'json', // 返回資料類型
+          data: { // 傳送資料
+            "productName": $("#productName").val(),
+            "unitPrice": $("#unitPrice").val(),
+            "unitsInStock": $("#unitsInStock").val()
+          },
+          beforeSend: function (jqXHR) { }, // 發送請求前執行
+          success: function (data, textStatus, jqXHR) { 
+            alert("新增成功！");
+          }, // 成功後執行
+          error: function (xhr, status, error) { }, // 失敗後執行
+          complete: function (xhr, status, error) { }, // 完成後執行
+        }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
         });
       });
-    });
 
+    });
 
   </script>
 
