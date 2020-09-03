@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS `managerAccount` (
 INSERT INTO `managerAccount` (managerName, managerPassword) VALUES ('hank2222', '$2y$10$m4iYYeeW5B8xucpXehJtUODaZk9E9L0v7cOO1kRbBwizZJq2EVSvW')
 
 CREATE TABLE IF NOT EXISTS `product` (
-  `productID` tinyint(10) unsigned zerofill NOT NULL auto_increment,
-  `productName` varchar(16) collate utf8_unicode_ci NOT NULL,
-  `unitPrice` MEDIUMINT NOT NULL,
-  `unitsInStock` tinyint(6) NOT NULL,
+  `productID` int unsigned zerofill NOT NULL auto_increment,
+  `productName` varchar(128) collate utf8_unicode_ci NOT NULL,
+  `unitPrice` int NOT NULL,
+  `unitsInStock` int NOT NULL,
 
   PRIMARY KEY (`productID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
@@ -61,3 +61,6 @@ CREATE TABLE IF NOT EXISTS `ordersDetail` (
 
 INSERT INTO `userAccountInfo` (`userName`, `userPassword`, `nickName`, `phoneNumber`, `email`) 
 VALUES ('peggy123', '12345678', 'passger', '0960725779', 'peggy83920@gmail.com')
+
+INSERT INTO `product` (`productName`, `unitPrice`, `unitsInStock`) 
+VALUES ('plain-B 1616 百搭神褲 LOKA', '1600', '220')

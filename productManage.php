@@ -5,33 +5,9 @@ if (isset($_SESSION["managerName"])) { // 判斷登入與否
   $managerName = $_SESSION["managerName"];
 }
 else {
-    echo "<script> alert('請先登入！'); window.location='manageLogin.php' </script>";
-    exit();
+  echo "<script> alert('請先登入！'); window.location='manageLogin.php' </script>";
+  exit();
 }
-
-require_once("connectMysql.php");
-
-// $sqlCommand = "SELECT `productName`, `unitPrice`, `unitsInStock` FROM `product`";
-// $result = mysqli_query($link, $sqlCommand);
-
-
-if (isset($_POST["createProduct"])) {
-  $productName = $_POST["productName"];
-  $unitPrice = $_POST["unitPrice"];
-  $unitsInStock = $_POST["unitsInStock"];
-  
-  $sqlCommand = "INSERT INTO `product` 
-  (`productName`, `unitPrice`, `unitsInStock`) VALUES ('$productName', '$unitPrice', '$unitsInStock')";
-  $result = mysqli_query($link, $sqlCommand);
-  
-  if ($result) {
-  
-    echo "<script> alert('新增資料成功'); window.location = 'productManage.php' </script>";
-  } else {
-    die('Error: ' . mysql_error()); //如果sql執行失敗輸出錯誤
-  }
-}
-// mysqli_close($link);
 
 
 ?>
@@ -117,7 +93,7 @@ if (isset($_POST["createProduct"])) {
 
   <div id="myCollapsible" class="col-md-12 collapse show" data-parent="#accordion">
     <div class="login-area add-mobile-gutter">
-      <form method="post" class="ng-pristine ng-valid">
+      <form class="ng-pristine ng-valid">
         <div class="login-form clearfix">
 
           <div class="form-title hidden-xs">商品名稱</div>
@@ -128,7 +104,7 @@ if (isset($_POST["createProduct"])) {
           <input type="number" name="unitsInStock" id="unitsInStock" tabindex="3" required>
 
         </div>
-        <button name="createProduct" id="createProduct" type="submit" class="plain-btn -login-btn"
+        <button name="createProduct" id="createProduct" type="button" class="plain-btn -login-btn"
           tabindex="4">新增商品</button>
       </form>
     </div>
@@ -146,44 +122,47 @@ if (isset($_POST["createProduct"])) {
       </thead>
 
       <tbody id="productResult">
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
         <tr>
-          <th scope="col" class="height-100"><?= $row['productName'] ?></th>
-          <th scope="col"><?= $row['unitPrice'] ?></th>
-          <th scope="col"><?= $row['unitsInStock'] ?></th>
-
+          <th scope="col" class="height-100">1</th>
+          <th scope="col">2</th>
+          <th scope="col">3</th>
         </tr>
-        <?php } ?>
       </tbody>
 
     </table>
   </div>
 
-
+  <div id="akacodedog">尚未執行</div>
 
   <script>
 
-    
+    $(document).ready(function () {
+      $("#createProduct").on('click', function (e) {
+        let productName = $("#productName").val();
+        let unitPrice = $("#unitPrice").val();
+        let unitsInStock = $("#unitsInStock").val();
 
+        $.ajax({
+          type: 'post', // 請求方法
+          url: 'ajax.php', // 請求網址
+          async: true, // 異步請求
+          cache: false, // 停止瀏覽器緩存加載
+          dataType: 'html', // 返回資料類型
+          data: { // 傳送資料
+            "productName": productName,
+            "unitPrice": unitPrice,
+            "unitsInStock": unitsInStock
+          },
+          beforeSend: function (jqXHR) { }, // 發送請求前執行
+          success: function (data, textStatus, jqXHR) { }, // 成功後執行
+          error: function (xhr, status, error) { }, // 失敗後執行
+          complete: function (xhr, status, error) { }, // 完成後執行
+        }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+          // $('#akacodedog').html(data); // 把結果輸出到#akacodedog容器
+        });
+      });
+    });
 
-    // $(document).ready(function () {
-    //   $("#newProduct").on('click', function () {
-    //     var x = document.getElementById("balance");
-    //     var y = document.getElementById("eye");
-    //     var z = document.getElementById("eyeClosed");
-
-    //     if (x.style.display === "none") {
-    //       x.style.display = "block";
-    //       y.style.display = "none";
-    //       z.src = "img/core-img/eye.png";
-    //     }
-    //     else {
-    //       x.style.display = "none";
-    //       y.style.display = "block";
-    //       z.src = "img/core-img/eye_closed.png";
-    //     }
-    //   });
-    // });
 
   </script>
 
