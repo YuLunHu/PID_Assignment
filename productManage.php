@@ -78,8 +78,9 @@ else {
   <!-- ---------------------------------------以下開始為新增商品之程式碼------------------------------------------------ -->
 
   <div class="well">
-    <button name="newProduct" id="newProduct" type="button" class="btn btn-outline-primary" data-toggle="collapse"
-      data-target="#myCollapsible" aria-expanded="true" aria-controls="myCollapsible">新增
+    <button name="newProduct" id="newProduct" type="button" class="btn btn-outline-primary" 
+    data-toggle="collapse" data-target="#myCollapsible" aria-expanded="false" 
+    aria-controls="myCollapsible">新增
       <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z">
@@ -112,7 +113,6 @@ else {
 
   <div id="productTable">
     <table class="table table-striped version_5 href-tr" id="sortTable">
-
       <thead>
         <tr>
           <th scope="col" class="height-100">商品名稱</th>
@@ -120,10 +120,8 @@ else {
           <th scope="col">庫存量</th>
         </tr>
       </thead>
-
       <tbody id="productResult">
       </tbody>
-
     </table>
   </div>
 
