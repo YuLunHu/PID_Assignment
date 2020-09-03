@@ -9,10 +9,11 @@ require_once("connectMysql.php");
 // 將商品資料存進資料庫
 $sqlCommand = "INSERT INTO `product` (`productName`, `unitPrice`, `unitsInStock`) 
 VALUES ('$productName', '$unitPrice', '$unitsInStock')";
-$result = mysqli_query($link, $sqlCommand) or die(mysqli_error($link));
+mysqli_query($link, $sqlCommand) or die(mysqli_error($link));
 
 mysqli_close($link);
 
+echo "1";
 exit();
 
 ?>

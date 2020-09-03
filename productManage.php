@@ -165,22 +165,17 @@ else {
       $("#createProduct").on('click', function (e) { 
         $.ajax({
           type: 'POST', // 請求方法
-          url: 'ajax.php', // 請求網址
+          url: 'newProduct.php', // 請求網址
           async: true, // 異步請求
           cache: false, // 停止瀏覽器緩存加載
           dataType: 'json', // 返回資料類型
           data: { // 傳送資料
             "productName": $("#productName").val(),
             "unitPrice": $("#unitPrice").val(),
-            "unitsInStock": $("#unitsInStock").val()
-          },
-          beforeSend: function (jqXHR) { }, // 發送請求前執行
-          success: function (data, textStatus, jqXHR) { 
-            alert("新增成功！");
-          }, // 成功後執行
-          error: function (xhr, status, error) { }, // 失敗後執行
-          complete: function (xhr, status, error) { }, // 完成後執行
+            "unitsInStock": $("#unitsInStock").val() },
         }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+          alert("新增成功！");
+          window.location = 'productManage.php'
         });
       });
 
