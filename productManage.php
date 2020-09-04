@@ -68,8 +68,8 @@ else {
 
   <!-- ---------------------------------------以下開始為新增商品之程式碼------------------------------------------------ -->
   <div class="well">
-    <button name="newProduct" id="newProduct" type="button" class="btn btn-outline-primary" data-toggle="collapse"
-      data-target="#myCollapsible" aria-expanded="false" aria-controls="myCollapsible">新增
+    <button name="newProduct" id="newProduct" type="button" class="btn btn-primary" data-toggle="collapse"
+      data-target="#myCollapsible" aria-expanded="true" aria-controls="myCollapsible">新增
       <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z">
@@ -104,15 +104,71 @@ else {
     <table class="table table-striped version_5 href-tr" id="sortTable">
       <thead>
         <tr>
-          <th scope="col" class="height-100">商品名稱</th>
+          <th scope="col" class="height-100">&nbsp;&nbsp;&nbsp;&nbsp;刪除/編輯</th>
+          <th scope="col">商品名稱</th>
           <th scope="col">單價</th>
           <th scope="col">庫存量</th>
         </tr>
       </thead>
       <tbody id="productResult">
+        <!-- <tr>
+          <th scope="col" class="height-100"><span class="pull-left"><button
+                class="btn btn-danger btn-xs deleteItem"><span class="glyphicon glyphicon-remove"
+                  aria-hidden="true"></span></button>&nbsp;<span class="pull-left"><button
+                  class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-pencil"
+                    aria-hidden="true"></span></button>&nbsp;</span></th>
+          <th scope="col">test商品名稱</th>
+          <th scope="col">test單價</th>
+          <th scope="col">test庫存量</th>
+        </tr> -->
       </tbody>
     </table>
   </div>
+
+  <!-- 對話盒 -->
+  <div id="newsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>新增/修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="titleTextBox">
+                                <span class="glyphicon glyphicon-bullhorn"></span>
+                                標題
+                            </label>
+                            <input type="text" id="titleTextBox" class="form-control" placeholder="請輸入標題" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ymdTextBox">
+                                <span class="glyphicon glyphicon-time"></span>
+                                日期
+                            </label>
+                            <input type="text" id="ymdTextBox" class="form-control"
+                                placeholder="yyyy-mm-dd 例如: 2017-05-20">
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button type="button" id="okButton" class="btn btn-success">
+                            <span class="glyphicon glyphicon-ok"></span> 確定
+                        </button>
+                        <button type="button" id="cancelButton" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove"></span> 取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /對話盒 -->
 
   <script>
 
@@ -136,16 +192,39 @@ else {
         }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
 
           var result = "";
+          var editButton = '<span class="pull-left"><button class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>&nbsp;</span>';
+          var removeButton = '<span class="pull-left"><button class="btn btn-danger btn-xs deleteItem"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>&nbsp;</span>';
+
           for (var i = 0; i < data.length; i++) {
             var ls = data[i];
             result = "<tr>" +
-              '<th scope="col" class="height-100">' + ls.productName + "</th>" +
-              '<th scope="col">' + ls.unitPrice + "</th>" +
+              '<th scope="col" class="height-100">' + removeButton + editButton + '</th>' +
+              '<th scope="col">' + ls.productName + "</th>" +
+              '<th scope="col">' + "$" + ls.unitPrice + "</th>" +
               '<th scope="col">' + ls.unitsInStock + "</th>" +
               "</tr>";
             $("#productResult").append(result);
           }
         });
+
+        // 編輯商品
+        $("#productResult").on("click",".editItem", function () {
+          var index = $(this).closest("tr").index();
+          currentIndex = index; // 記錄該項目之索引
+          console.log(index);
+          $("#newsModal").modal({ backdrop: "static" });
+        });
+        
+        
+        
+        // 刪除商品
+        $("#productResult").on("click",".deleteItem", function () {
+          console.log('delete');
+
+        });
+
+
+
       }
 
       // ------------------------------------------------------------------> 新增一筆商品
