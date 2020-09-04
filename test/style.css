@@ -1,0 +1,6 @@
+.panel-heading .accordion-toggle:before {  
+    content: "－"; 
+}
+.panel-heading .accordion-toggle.collapsed:before {
+    content: "＋";
+}

@@ -30,8 +30,8 @@ else {
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-  <link rel="stylesheet" href="css/core-style.css">
-  <link rel="stylesheet" href="style.css">
+  <!-- <link rel="stylesheet" href="css/core-style.css"> -->
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/style_ok.css">
   <script src="js/bootstrap.min.js"></script>
 </head>
@@ -40,7 +40,6 @@ else {
 
   <header class="header_area">
     <div class="classy-nav-container breakpoint-off d-flex align-items-center justify-content-between">
-
       <nav class="classy-navbar" id="essenceNav">
         <a class="nav-brand" href="manageIndex.php"><img src="img/core-img/logo_plainB.png" alt=""></a>
         <div class="classy-navbar-toggler">
@@ -55,20 +54,12 @@ else {
               <li><a href="productManage.php">商品管理</a></li>
               <li><a href="#">會員管理</a></li>
             </ul>
-          </div>
-        </div>
-      </nav>
-
-      <div class="header-meta d-flex clearfix justify-content-end">
-        <div class="search-area">
-          <div style="float: right;">
             <div class="user-login-info">
               <a href="manageLogin.php?logout=1">登出</a>
             </div>
           </div>
         </div>
-      </div>
-
+      </nav>
     </div>
   </header>
 
@@ -76,11 +67,9 @@ else {
   <h2 style="margin-left: 70px">Hi! <?= $managerName ?> 管理員，您希望對商品做什麼修改呢？</h2>
 
   <!-- ---------------------------------------以下開始為新增商品之程式碼------------------------------------------------ -->
-
   <div class="well">
-    <button name="newProduct" id="newProduct" type="button" class="btn btn-outline-primary" 
-    data-toggle="collapse" data-target="#myCollapsible" aria-expanded="false" 
-    aria-controls="myCollapsible">新增
+    <button name="newProduct" id="newProduct" type="button" class="btn btn-outline-primary" data-toggle="collapse"
+      data-target="#myCollapsible" aria-expanded="false" aria-controls="myCollapsible">新增
       <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z">
@@ -92,7 +81,7 @@ else {
     </button>
   </div>
 
-  <div id="myCollapsible" class="col-md-12 collapse show" data-parent="#accordion">
+  <div id="myCollapsible" class="col-md-12 collapse" data-parent="#accordion">
     <div class="login-area add-mobile-gutter">
       <form class="ng-pristine ng-valid">
         <div class="login-form clearfix">
@@ -139,7 +128,7 @@ else {
           async: true, // 異步請求
           cache: false, // 停止瀏覽器緩存加載
           dataType: 'json', // 返回資料類型
-          
+
           beforeSend: function (jqXHR) { }, // 發送請求前執行
           success: function (data, textStatus, jqXHR) { }, // 成功後執行
           error: function (xhr, status, error) { }, // 失敗後執行
@@ -149,18 +138,18 @@ else {
           var result = "";
           for (var i = 0; i < data.length; i++) {
             var ls = data[i];
-            result = "<tr>"+
-            '<th scope="col" class="height-100">' + ls.productName + "</th>" +
-            '<th scope="col">' + ls.unitPrice + "</th>" +
-            '<th scope="col">' + ls.unitsInStock + "</th>" + 
-            "</tr>";
+            result = "<tr>" +
+              '<th scope="col" class="height-100">' + ls.productName + "</th>" +
+              '<th scope="col">' + ls.unitPrice + "</th>" +
+              '<th scope="col">' + ls.unitsInStock + "</th>" +
+              "</tr>";
             $("#productResult").append(result);
           }
         });
       }
-      
+
       // ------------------------------------------------------------------> 新增一筆商品
-      $("#createProduct").on('click', function (e) { 
+      $("#createProduct").on('click', function (e) {
         $.ajax({
           type: 'POST', // 請求方法
           url: 'newProduct.php', // 請求網址
@@ -170,7 +159,8 @@ else {
           data: { // 傳送資料
             "productName": $("#productName").val(),
             "unitPrice": $("#unitPrice").val(),
-            "unitsInStock": $("#unitsInStock").val() },
+            "unitsInStock": $("#unitsInStock").val()
+          },
         }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
           alert("新增成功！");
           window.location = 'productManage.php'
