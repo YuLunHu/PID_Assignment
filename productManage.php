@@ -184,7 +184,7 @@ else {
 
       // -----------------------------------------------------------> 更新資料庫中目前的商品
       function refreshProduct() {
-        $("#productResult").empty(); //清空產品資料
+        $("#productResult").empty(); // 清空產品資料
         $.ajax({
           type: 'GET', // 請求方法
           url: 'refreshProduct.php', // 請求網址
@@ -216,25 +216,49 @@ else {
           }
         });
 
-        // 編輯商品
+        // 點按編輯商品的那支鉛筆
         $("#productResult").on("click", ".editItem", function () {
           var index = $(this).closest("tr").index();
           currentIndex = index; // 記錄該項目之索引
-          $("#productNameBox").val(productList[index].productName);
-          $("#unitPriceBox").val(productList[index].unitPrice);
-          $("#unitsInStockBox").val(productList[index].unitsInStock);
+          $("#productNameBox").val(productList[currentIndex].productName);
+          $("#unitPriceBox").val(productList[currentIndex].unitPrice);
+          $("#unitsInStockBox").val(productList[currentIndex].unitsInStock);
           $("#newsModal").modal();
         });
 
-        // 刪除商品
+        // 點按Ｘ刪除商品
         $("#productResult").on("click", ".deleteItem", function () {
-          console.log('delete');
+          var index = $(this).closest("tr").index();
+          currentIndex = index; // 記錄該項目之索引
+          console.log(currentIndex);
+
+          Swal.fire({
+            title: "警告！",
+            text: "確定要刪除這項商品資訊嗎？",
+            showCancelButton: true
+          }).then(function (result) {
+            if (result.value) {
+              Swal.fire("資料已刪除！");
+              $.ajax({
+                type: 'POST', // 請求方法
+                url: 'deleteProduct.php', // 請求網址
+                async: true, // 異步請求
+                cache: false, // 停止瀏覽器緩存加載
+                dataType: 'json', // 返回資料類型
+                data: { // 傳送資料
+                  "productID": productList[currentIndex].productID,
+                },
+              }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+                refreshProduct();
+              });
+            }
+          });
 
         });
 
       }
 
-      // 修改商品資料
+      // 點擊確認修改商品資料
       $("#okButton").on("click", function () {
         Swal.fire({
           title: "修改",
@@ -265,25 +289,33 @@ else {
 
       // 新增商品
       $("#createProduct").on('click', function (e) {
-        $.ajax({
-          type: 'POST', // 請求方法
-          url: 'newProduct.php', // 請求網址
-          async: true, // 異步請求
-          cache: false, // 停止瀏覽器緩存加載
-          dataType: 'json', // 返回資料類型
-          data: { // 傳送資料
-            "productName": $("#productName").val(),
-            "unitPrice": $("#unitPrice").val(),
-            "unitsInStock": $("#unitsInStock").val()
-          },
-        }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
-          alert("新增成功！");
-          window.location = 'productManage.php';
-          refreshProduct();
+        Swal.fire({
+          title: "新增",
+          text: "確定要新增該筆資料嗎？",
+          showCancelButton: true
+        }).then(function (result) {
+          if (result.value) {
+            Swal.fire("資料已新增！");
+            $.ajax({
+              type: 'POST', // 請求方法
+              url: 'newProduct.php', // 請求網址
+              async: true, // 異步請求
+              cache: false, // 停止瀏覽器緩存加載
+              dataType: 'json', // 返回資料類型
+              data: { // 傳送資料
+                "productName": $("#productName").val(),
+                "unitPrice": $("#unitPrice").val(),
+                "unitsInStock": $("#unitsInStock").val()
+              },
+            }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+              refreshProduct();
+              $("#myCollapsible").collapse('hide');
+              // window.location = 'productManage.php';
+            });
+          }
         });
       });
 
-      
 
     });
 

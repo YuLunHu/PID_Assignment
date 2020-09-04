@@ -33,7 +33,7 @@ else
       <nav class="classy-navbar" id="essenceNav">
         <a class="nav-brand" href="index.php"><img src="img/core-img/logo_plainB.png" alt=""></a>
         <div class="classy-navbar-toggler">
-          <span class="navbarToggler"><span></span><span></span><span></span></span>
+          <span class="navbarToggler"></span>
         </div>
         <div class="classy-menu">
           <div class="classycloseIcon">
