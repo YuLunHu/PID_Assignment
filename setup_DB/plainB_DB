@@ -64,3 +64,6 @@ VALUES ('peggy123', '12345678', 'passger', '0960725779', 'peggy83920@gmail.com')
 
 INSERT INTO `product` (`productName`, `unitPrice`, `unitsInStock`) 
 VALUES ('plain-B 1616 百搭神褲 LOKA', '1600', '220')
+
+UPDATE `product` SET `productName` = 'testttt', `unitPrice`= '666', 
+`unitsInStock`= '66' WHERE `productID` = '0000000050'

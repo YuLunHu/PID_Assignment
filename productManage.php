@@ -33,7 +33,9 @@ else {
   <!-- <link rel="stylesheet" href="css/core-style.css"> -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/style_ok.css">
-  <script src="js/bootstrap.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 </head>
 
 <body>
@@ -68,7 +70,7 @@ else {
 
   <!-- ---------------------------------------以下開始為新增商品之程式碼------------------------------------------------ -->
   <div class="well">
-    <button name="newProduct" id="newProduct" type="button" class="btn btn-primary" data-toggle="collapse"
+    <button name="newProduct" id="newProduct" type="button" class="btn btn-success" data-toggle="collapse"
       data-target="#myCollapsible" aria-expanded="true" aria-controls="myCollapsible">新增
       <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor"
         xmlns="http://www.w3.org/2000/svg">
@@ -104,80 +106,85 @@ else {
     <table class="table table-striped version_5 href-tr" id="sortTable">
       <thead>
         <tr>
-          <th scope="col" class="height-100">&nbsp;&nbsp;&nbsp;&nbsp;刪除/編輯</th>
+          <th scope="col" class="height-100">&nbsp;&nbsp;&nbsp;&nbsp;刪除 / 編輯</th>
           <th scope="col">商品名稱</th>
           <th scope="col">單價</th>
           <th scope="col">庫存量</th>
         </tr>
       </thead>
       <tbody id="productResult">
-        <!-- <tr>
-          <th scope="col" class="height-100"><span class="pull-left"><button
-                class="btn btn-danger btn-xs deleteItem"><span class="glyphicon glyphicon-remove"
-                  aria-hidden="true"></span></button>&nbsp;<span class="pull-left"><button
-                  class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-pencil"
-                    aria-hidden="true"></span></button>&nbsp;</span></th>
-          <th scope="col">test商品名稱</th>
-          <th scope="col">test單價</th>
-          <th scope="col">test庫存量</th>
-        </tr> -->
       </tbody>
     </table>
   </div>
 
   <!-- 對話盒 -->
   <div id="newsModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4>新增/修改</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="titleTextBox">
-                                <span class="glyphicon glyphicon-bullhorn"></span>
-                                標題
-                            </label>
-                            <input type="text" id="titleTextBox" class="form-control" placeholder="請輸入標題" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ymdTextBox">
-                                <span class="glyphicon glyphicon-time"></span>
-                                日期
-                            </label>
-                            <input type="text" id="ymdTextBox" class="form-control"
-                                placeholder="yyyy-mm-dd 例如: 2017-05-20">
-                        </div>
-
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <div class="pull-right">
-                        <button type="button" id="okButton" class="btn btn-success">
-                            <span class="glyphicon glyphicon-ok"></span> 確定
-                        </button>
-                        <button type="button" id="cancelButton" class="btn btn-default" data-dismiss="modal">
-                            <span class="glyphicon glyphicon-remove"></span> 取消
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h2>修改商品資訊</h4>
         </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="productNameBox" style="float: left">
+                <span class="glyphicon glyphicon-tag"></span>
+                商品名稱
+              </label>
+              <input type="text" id="productNameBox" class="form-control" placeholder="請輸入商品名稱">
+            </div>
+
+            <div class="form-group">
+              <label for="unitPriceBox" style="float: left">
+                <span class="glyphicon glyphicon-usd"></span>
+                單價
+              </label>
+              <input type="text" id="unitPriceBox" class="form-control" placeholder="請輸入商品單價">
+            </div>
+
+            <div class="form-group">
+              <label for="unitsInStockBox" style="float: left">
+                <span class="glyphicon glyphicon-align-justify"></span>
+                庫存量
+              </label>
+              <input type="text" id="unitsInStockBox" class="form-control" placeholder="請輸入商品目前的庫存量">
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-right">
+            <button type="button" id="okButton" class="btn btn-success">
+              <span class="glyphicon glyphicon-ok"></span> 確定
+            </button>
+            <button type="button" id="cancelButton" class="btn btn-default" data-dismiss="modal">
+              <span class="glyphicon glyphicon-remove"></span> 取消
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- /對話盒 -->
+  </div>
+  <!-- /對話盒 -->
 
   <script>
 
     $(document).ready(function () {
 
+      var productList =
+        [
+          { productID: "99999", productName: "test1", unitPrice: "100", unitsInStock: "20" },
+          { productID: "88888", productName: "test2", unitPrice: "1000", unitsInStock: "2" }
+        ];
+
+      var currentIndex = -1; // 紀錄資料之索引值
+
       refreshProduct();
 
       // -----------------------------------------------------------> 更新資料庫中目前的商品
       function refreshProduct() {
+        $("#productResult").empty(); //清空產品資料
         $.ajax({
           type: 'GET', // 請求方法
           url: 'refreshProduct.php', // 請求網址
@@ -191,12 +198,14 @@ else {
           complete: function (xhr, status, error) { }, // 完成後執行
         }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
 
+          productList = data;
+
           var result = "";
           var editButton = '<span class="pull-left"><button class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>&nbsp;</span>';
           var removeButton = '<span class="pull-left"><button class="btn btn-danger btn-xs deleteItem"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>&nbsp;</span>';
 
-          for (var i = 0; i < data.length; i++) {
-            var ls = data[i];
+          for (var i = 0; i < productList.length; i++) {
+            var ls = productList[i];
             result = "<tr>" +
               '<th scope="col" class="height-100">' + removeButton + editButton + '</th>' +
               '<th scope="col">' + ls.productName + "</th>" +
@@ -208,26 +217,53 @@ else {
         });
 
         // 編輯商品
-        $("#productResult").on("click",".editItem", function () {
+        $("#productResult").on("click", ".editItem", function () {
           var index = $(this).closest("tr").index();
           currentIndex = index; // 記錄該項目之索引
-          console.log(index);
-          $("#newsModal").modal({ backdrop: "static" });
+          $("#productNameBox").val(productList[index].productName);
+          $("#unitPriceBox").val(productList[index].unitPrice);
+          $("#unitsInStockBox").val(productList[index].unitsInStock);
+          $("#newsModal").modal();
         });
-        
-        
-        
+
         // 刪除商品
-        $("#productResult").on("click",".deleteItem", function () {
+        $("#productResult").on("click", ".deleteItem", function () {
           console.log('delete');
 
         });
 
-
-
       }
 
-      // ------------------------------------------------------------------> 新增一筆商品
+      // 修改商品資料
+      $("#okButton").on("click", function () {
+        Swal.fire({
+          title: "修改",
+          text: "確定要修改嗎？",
+          showCancelButton: true
+        }).then(function (result) {
+          if (result.value) {
+            Swal.fire("資料已更新！");
+            $.ajax({
+              type: 'POST', // 請求方法
+              url: 'modifyProduct.php', // 請求網址
+              async: true, // 異步請求
+              cache: false, // 停止瀏覽器緩存加載
+              dataType: 'json', // 返回資料類型
+              data: { // 傳送資料
+                "productID": productList[currentIndex].productID,
+                "productName": $("#productNameBox").val(),
+                "unitPrice": $("#unitPriceBox").val(),
+                "unitsInStock": $("#unitsInStockBox").val()
+              },
+            }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+              refreshProduct();
+              $("#newsModal").modal("hide");
+            });
+          }
+        });
+      });
+
+      // 新增商品
       $("#createProduct").on('click', function (e) {
         $.ajax({
           type: 'POST', // 請求方法
@@ -242,16 +278,20 @@ else {
           },
         }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
           alert("新增成功！");
-          window.location = 'productManage.php'
+          window.location = 'productManage.php';
+          refreshProduct();
         });
       });
+
+      
 
     });
 
   </script>
 
 
-  <script src="js/jquery/jquery-2.2.4.min.js"></script>
+  <!-- <script src="js/jquery/jquery-2.2.4.min.js"></script>
+  <script src="js/bootstrap.min.js"></script> -->
   <script src="js/popper.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/classy-nav.min.js"></script>

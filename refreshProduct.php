@@ -2,7 +2,7 @@
 
 require_once("connectMysql.php");
 
-$sqlCommand = "SELECT `productName`, `unitPrice`, `unitsInStock` FROM `product`";
+$sqlCommand = "SELECT * FROM `product`";
 $result = mysqli_query($link, $sqlCommand);
 
 $dataarr = array();
