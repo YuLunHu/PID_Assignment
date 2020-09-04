@@ -45,7 +45,7 @@ else {
       <nav class="classy-navbar" id="essenceNav">
         <a class="nav-brand" href="manageIndex.php"><img src="img/core-img/logo_plainB.png" alt=""></a>
         <div class="classy-navbar-toggler">
-          <span class="navbarToggler"><span></span><span></span><span></span></span>
+          <span class="navbarToggler"></span>
         </div>
         <div class="classy-menu">
           <div class="classycloseIcon">
@@ -289,31 +289,43 @@ else {
 
       // 新增商品
       $("#createProduct").on('click', function (e) {
-        Swal.fire({
-          title: "新增",
-          text: "確定要新增該筆資料嗎？",
-          showCancelButton: true
-        }).then(function (result) {
-          if (result.value) {
-            Swal.fire("資料已新增！");
-            $.ajax({
-              type: 'POST', // 請求方法
-              url: 'newProduct.php', // 請求網址
-              async: true, // 異步請求
-              cache: false, // 停止瀏覽器緩存加載
-              dataType: 'json', // 返回資料類型
-              data: { // 傳送資料
-                "productName": $("#productName").val(),
-                "unitPrice": $("#unitPrice").val(),
-                "unitsInStock": $("#unitsInStock").val()
-              },
-            }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
-              refreshProduct();
-              $("#myCollapsible").collapse('hide');
-              // window.location = 'productManage.php';
+        // 檢查商品名稱是否重複
+        $.each(productList, function (index, value) {
+          if ($("#productName").val() === value.productName) {
+            Swal.fire({
+              title: "警告",
+              text: "商品名稱重複！",
+            }).then(function (result) { });
+          }
+          else {
+            Swal.fire({
+              title: "新增",
+              text: "確定要新增該筆資料嗎？",
+              showCancelButton: true
+            }).then(function (result) {
+              if (result.value) {
+                Swal.fire("資料已新增！");
+                $.ajax({
+                  type: 'POST', // 請求方法
+                  url: 'newProduct.php', // 請求網址
+                  async: true, // 異步請求
+                  cache: false, // 停止瀏覽器緩存加載
+                  dataType: 'json', // 返回資料類型
+                  data: { // 傳送資料
+                    "productName": $("#productName").val(),
+                    "unitPrice": $("#unitPrice").val(),
+                    "unitsInStock": $("#unitsInStock").val()
+                  },
+                }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+                  refreshProduct();
+                  $("#myCollapsible").collapse('hide');
+                  // window.location = 'productManage.php';
+                });
+              }
             });
           }
         });
+
       });
 
 
