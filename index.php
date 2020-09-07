@@ -81,6 +81,61 @@ else
     </table>
   </div>
 
+  <!-- 對話盒 -->
+  <div id="newsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h2>加入購物車</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+
+            <div class="form-group">
+              <div class="preview"><img id="selectedImage" src="" width="100" height="100"></div>
+            </div>
+
+            <div class="form-group">
+              <label style="float: left">
+                <span class="glyphicon glyphicon-tag"></span>
+                商品名稱: <h id="productName">123</h>
+              </label>
+
+            </div>
+
+            <div class="form-group">
+              <label style="float: left">
+                <span class="glyphicon glyphicon-usd"></span>
+                單價: <h id="unitPrice">$123</h>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label style="float: left">
+                <span class="glyphicon glyphicon-hamburger"></span>
+                數量: <input type="number" id="quantity" min="1" max="5">
+              </label>
+            </div>
+
+            
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div class="pull-right">
+            <button type="button" id="okButton" class="btn btn-success">
+              <span class="glyphicon glyphicon-ok"></span> 確定
+            </button>
+            <button type="button" id="cancelButton" class="btn btn-default" data-dismiss="modal">
+              <span class="glyphicon glyphicon-remove"></span> 取消
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /對話盒 -->
+
   <!-- ------------------------------------以下為Js語法------------------------------------------->
   <script>
 
@@ -115,7 +170,7 @@ else
           productList = data;
 
           var result = "";
-          var shoppingCart = '<span class="pull-left"><button class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>&nbsp;</span>';
+          var shoppingCart = '<span class="pull-left"><button class="btn btn-info btn-xs shoppingItem"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>&nbsp;</span>';
           
           for (var i = 0; i < productList.length; i++) {
             var ls = productList[i];
@@ -136,7 +191,7 @@ else
         });
 
         // 點按加入購物車
-        $("#productResult").on("click", ".editItem", function () {
+        $("#productResult").on("click", ".shoppingItem", function () {
           var index = $(this).closest("tr").index();
           currentIndex = index; // 記錄該項目之索引
 
@@ -146,10 +201,9 @@ else
           else {
             ImageName = productList[currentIndex].productImageName;
           }
-
-          $("#productNameBox").val(productList[currentIndex].productName);
-          $("#unitPriceBox").val(productList[currentIndex].unitPrice);
-          $("#unitsInStockBox").val(productList[currentIndex].unitsInStock);
+          $("#productName").html(productList[currentIndex].productName);
+          $("#unitPrice").html(productList[currentIndex].unitPrice);
+          $("#quantity").attr("max", productList[currentIndex].unitsInStock);
           $("#selectedImage").attr("src", "img/productImage/" + ImageName);
 
           $("#newsModal").modal();
