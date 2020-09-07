@@ -96,6 +96,7 @@ else {
           <input type="number" name="unitsInStock" id="unitsInStock" tabindex="3" required>
           <div class="form-title hidden-xs">商品圖片</div>
           <input type="file" accept="image/*" name="productImageName" id="productImageName" tabindex="4" required>
+          <div class="preview"><img id="newImage" src="" width="100" height="100"></div>
 
         </div>
         <button name="createProduct" id="createProduct" type="button" class="plain-btn -login-btn"
@@ -159,7 +160,7 @@ else {
                 <span class="glyphicon glyphicon-align-justify"></span>
                 商品圖片
               </label>
-              <div class="preview"><img id="tempImage" src="" width="100" height="100"></div>
+              <div class="preview"><img id="selectedImage" src="" width="100" height="100"></div>
               <input type="file" accept="image/*" id="productImageBox" class="form-control">
             </div>
 
@@ -250,71 +251,93 @@ else {
           $("#productNameBox").val(productList[currentIndex].productName);
           $("#unitPriceBox").val(productList[currentIndex].unitPrice);
           $("#unitsInStockBox").val(productList[currentIndex].unitsInStock);
-          $("#tempImage").attr("src", "img/productImage/" + ImageName);
-          
+          $("#selectedImage").attr("src", "img/productImage/" + ImageName);
+
           $("#newsModal").modal();
         });
 
-        // // 點按Ｘ刪除商品
-        // $("#productResult").on("click", ".deleteItem", function () {
-        //   var index = $(this).closest("tr").index();
-        //   currentIndex = index; // 記錄該項目之索引
-        //   console.log(currentIndex);
+        // 點按Ｘ刪除商品
+        $("#productResult").on("click", ".deleteItem", function () {
+          var index = $(this).closest("tr").index();
+          currentIndex = index; // 記錄該項目之索引
+          console.log(currentIndex);
 
-        //   Swal.fire({
-        //     title: "警告！",
-        //     text: "確定要刪除這項商品資訊嗎？",
-        //     showCancelButton: true
-        //   }).then(function (result) {
-        //     if (result.value) {
-        //       Swal.fire("資料已刪除！");
-        //       $.ajax({
-        //         type: 'POST', // 請求方法
-        //         url: 'deleteProduct.php', // 請求網址
-        //         async: true, // 異步請求
-        //         cache: false, // 停止瀏覽器緩存加載
-        //         dataType: 'json', // 返回資料類型
-        //         data: { // 傳送資料
-        //           "productID": productList[currentIndex].productID,
-        //         },
-        //       }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
-        //         refreshProduct();
-        //       });
-        //     }
-        //   });
+          Swal.fire({
+            title: "警告！",
+            text: "確定要刪除這項商品資訊嗎？",
+            showCancelButton: true
+          }).then(function (result) {
+            if (result.value) {
+              Swal.fire("資料已刪除！");
+              $.ajax({
+                type: 'POST', // 請求方法
+                url: 'deleteProduct.php', // 請求網址
+                async: true, // 異步請求
+                cache: false, // 停止瀏覽器緩存加載
+                dataType: 'json', // 返回資料類型
+                data: { // 傳送資料
+                  "productID": productList[currentIndex].productID,
+                },
+              }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
+                refreshProduct();
+              });
+            }
+          });
 
-        // });
+        });
 
       }
 
-      // // 點擊確認修改商品資料
-      // $("#okButton").on("click", function () {
-      //   Swal.fire({
-      //     title: "修改",
-      //     text: "確定要修改嗎？",
-      //     showCancelButton: true
-      //   }).then(function (result) {
-      //     if (result.value) {
-      //       Swal.fire("資料已更新！");
-      //       $.ajax({
-      //         type: 'POST', // 請求方法
-      //         url: 'modifyProduct.php', // 請求網址
-      //         async: true, // 異步請求
-      //         cache: false, // 停止瀏覽器緩存加載
-      //         dataType: 'json', // 返回資料類型
-      //         data: { // 傳送資料
-      //           "productID": productList[currentIndex].productID,
-      //           "productName": $("#productNameBox").val(),
-      //           "unitPrice": $("#unitPriceBox").val(),
-      //           "unitsInStock": $("#unitsInStockBox").val()
-      //         },
-      //       }).done(function (data, textStatus, jqXHR) { // 無論成功、失敗皆執行
-      //         refreshProduct();
-      //         $("#newsModal").modal("hide");
-      //       });
-      //     }
-      //   });
-      // });
+      $("#productImageName").change(function () {
+        readURL(this, "#newImage");
+      });
+      $("#productImageBox").change(function () {
+        readURL(this, "#selectedImage");
+      });
+
+      function readURL(input, elementID) { // 商品圖片預覽功能
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $(elementID).attr('src', e.target.result);
+          }
+          reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+      }
+
+      // 點擊確認修改商品資料
+      $("#okButton").on("click", function () {
+        Swal.fire({
+          title: "修改",
+          text: "確定要修改嗎？",
+          showCancelButton: true
+        }).then(function (result) {
+          if (result.value) {
+
+            var formData = new FormData();
+            formData.append('productID', productList[currentIndex].productID);
+            formData.append('productName', $("#productNameBox").val());
+            formData.append('unitPrice', $("#unitPriceBox").val());
+            formData.append('unitsInStock', $("#unitsInStockBox").val());
+            formData.append('productImageName', $('#productImageBox')[0].files[0]);
+
+            $.ajax({
+              url: 'modifyProduct.php',
+              type: 'POST',
+              data: formData,
+              contentType: false,
+              processData: false,
+              success: function (response) {
+                Swal.fire("資料已更新！");
+                refreshProduct();
+                $("#myCollapsible").collapse('hide');
+              },
+            });
+
+
+          }
+        });
+      });
 
       // 新增商品
       $("#createProduct").on('click', function (e) {
