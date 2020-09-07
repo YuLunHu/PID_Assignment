@@ -73,6 +73,7 @@ else
           <th scope="col">商品縮圖</th>
           <th scope="col">商品名稱</th>
           <th scope="col">單價</th>
+          <th scope="col">購買</th>
         </tr>
       </thead>
       <tbody id="productResult">
@@ -114,9 +115,8 @@ else
           productList = data;
 
           var result = "";
-          var editButton = '<span class="pull-left"><button class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>&nbsp;</span>';
-          var removeButton = '<span class="pull-left"><button class="btn btn-danger btn-xs deleteItem"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>&nbsp;</span>';
-
+          var shoppingCart = '<span class="pull-left"><button class="btn btn-info btn-xs editItem"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>&nbsp;</span>';
+          
           for (var i = 0; i < productList.length; i++) {
             var ls = productList[i];
             if (ls.productImageName === "") {
@@ -129,9 +129,30 @@ else
               '<th scope="col">' + '<div class="preview"><img src="img/productImage/' + ImageName + '" width="100" height="100"></div>' + '</th>' +
               '<th scope="col">' + ls.productName + "</th>" +
               '<th scope="col">' + "$" + ls.unitPrice + "</th>" +
+              '<th scope="col">' + shoppingCart + "</th>" +
               "</tr>";
             $("#productResult").append(result);
           }
+        });
+
+        // 點按加入購物車
+        $("#productResult").on("click", ".editItem", function () {
+          var index = $(this).closest("tr").index();
+          currentIndex = index; // 記錄該項目之索引
+
+          if (productList[currentIndex].productImageName === "") {
+            ImageName = 'default.jpeg';
+          }
+          else {
+            ImageName = productList[currentIndex].productImageName;
+          }
+
+          $("#productNameBox").val(productList[currentIndex].productName);
+          $("#unitPriceBox").val(productList[currentIndex].unitPrice);
+          $("#unitsInStockBox").val(productList[currentIndex].unitsInStock);
+          $("#selectedImage").attr("src", "img/productImage/" + ImageName);
+
+          $("#newsModal").modal();
         });
 
       }
