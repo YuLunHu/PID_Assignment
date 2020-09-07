@@ -1,0 +1,21 @@
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Microsoft JhengHei UI","Segoe UI","Roboto","Helvetica Neue", Arial, sans-serif,"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html{
+    font-size: 14px;
+}/*改變所有文字的大小*/
+
+h1,h2,h3,h4,h5,h6{
+    font-weight: 700;
+}
+.h1, .h2,.h3 , .h4 , .h5 , .h6{
+    font-weight: 700;
+}
+.btn-cart{
+    background-color: transparent;
+    position: relative;
+}
+.btn-cart>.badge{
+    position: absolute;
+}

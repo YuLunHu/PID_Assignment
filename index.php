@@ -16,7 +16,7 @@ else
   <meta name="description" content="">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
- 
+
   <title>商品管理</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -24,6 +24,7 @@ else
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/style_ok.css">
+  <link rel="stylesheet" href="css/shoppingCart.css">
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
@@ -48,22 +49,70 @@ else
               <li><a href="index.php">首頁</a></li>
               <li><a href="register.php">註冊</a></li>
               <li><?php if ($nickName == "Guest") { ?>
-              <a href="login.php">登入</a>
-              <?php } else { ?>
-              <a href="login.php?logout=1">登出</a>
-              <?php } ?></li>
+                <a href="login.php">登入</a>
+                <?php } else { ?>
+                <a href="login.php?logout=1">登出</a>
+                <?php } ?></li>
             </ul>
           </div>
         </div>
       </nav>
 
-      
+
     </div>
   </header>
 
   <div style="margin: 30px 8px 20px 6px;border-top:1px dotted #C0C0C0;"></div>
 
   <h2 style="margin-left: 70px">Hi! <?= $nickName ?> , 祝您有美好的一天</h2>
+
+  <!--Navbar-->
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand h1 mb-0" href="#"></a>
+    <!--Cart-->
+    <div class="dropdown" style="float: right">
+      <button class="btn btn-cart" btn- type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-shopping-cart fa-2x"></i>
+        <span class="badge badge-pill badge-danger">2</span>
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" style="min-width: 300px;">
+        <div class="px-4 py-3">
+          <div class="h6">已選購商品</div>
+          <table class="table table-sm">
+            <tr>
+              <td>
+                <a href="#">
+                  <i class="far fa-trash-alt"></i>
+                </a>
+              </td>
+              <td>
+                金牌西裝
+              </td>
+              <td>1 件</td>
+              <td>$ 520</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="#">
+                  <i class="far fa-trash-alt"></i>
+                </a>
+              </td>
+              <td>
+                金牌女裝
+              </td>
+              <td>1 件</td>
+              <td>$ 480</td>
+            </tr>
+          </table>
+          <button class="btn btn-primary btn-block" type="button">
+            <i class="fas fa-shopping-cart"></i>
+            結帳去
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
 
 
   <div id="productTable">
@@ -99,7 +148,7 @@ else
             <div class="form-group">
               <label style="float: left">
                 <span class="glyphicon glyphicon-tag"></span>
-                商品名稱: <h id="productName">123</h>
+                商品名稱: <h id="productName"></h>
               </label>
 
             </div>
@@ -107,18 +156,18 @@ else
             <div class="form-group">
               <label style="float: left">
                 <span class="glyphicon glyphicon-usd"></span>
-                單價: <h id="unitPrice">$123</h>
+                單價: <h id="unitPrice"></h>
               </label>
             </div>
 
             <div class="form-group">
               <label style="float: left">
                 <span class="glyphicon glyphicon-hamburger"></span>
-                數量: <input type="number" id="quantity" min="1" max="5">
+                數量: <input type="number" id="quantity" value="1" min="1" max="5">
               </label>
             </div>
 
-            
+
           </form>
         </div>
         <div class="modal-footer">
@@ -171,7 +220,7 @@ else
 
           var result = "";
           var shoppingCart = '<span class="pull-left"><button class="btn btn-info btn-xs shoppingItem"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></button>&nbsp;</span>';
-          
+
           for (var i = 0; i < productList.length; i++) {
             var ls = productList[i];
             if (ls.productImageName === "") {
@@ -182,7 +231,7 @@ else
             }
             result = "<tr>" +
               '<th scope="col">' + '<div class="preview"><img src="img/productImage/' + ImageName + '" width="100" height="100"></div>' + '</th>' +
-              '<th scope="col">' + ls.productName + "</th>" +
+              '<th scope="col" class="product">' + ls.productName + "</th>" +
               '<th scope="col">' + "$" + ls.unitPrice + "</th>" +
               '<th scope="col">' + shoppingCart + "</th>" +
               "</tr>";
@@ -210,6 +259,37 @@ else
         });
 
       }
+
+      // 確認加入購物車
+      $("#okButton").on("click", function () {
+        Swal.fire({
+          title: "提醒",
+          text: "確定要加入購物車嗎？",
+          showCancelButton: true
+        }).then(function (result) {
+          if (result.value) {
+
+            var formData = new FormData();
+
+            formData.append('productID', productList[currentIndex].productID);
+            formData.append('quantity', $("#quantity").val());
+
+            $.ajax({
+              url: 'addShoppingCart.php',
+              type: 'POST',
+              data: formData,
+              contentType: false,
+              processData: false,
+              success: function (response) {
+                console.log(response);
+                Swal.fire("加入購物車成功！");
+                $("#newsModal").modal('hide');
+              },
+            });
+
+          }
+        });
+      });
 
     });
 

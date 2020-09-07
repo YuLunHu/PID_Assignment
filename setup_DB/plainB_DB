@@ -28,6 +28,16 @@ CREATE TABLE IF NOT EXISTS `product` (
   PRIMARY KEY (`productID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `shoppingCart` (
+  `userID` tinyint(8) unsigned zerofill NOT NULL,
+  `productID` int unsigned zerofill NOT NULL,
+  `quantity` int NOT NULL,
+
+  PRIMARY KEY (`userID`, `productID`),
+  FOREIGN KEY (`userID`) REFERENCES userAccountInfo(`userID`),
+  FOREIGN KEY (`productID`) REFERENCES product(`productID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
 CREATE TABLE IF NOT EXISTS `userAccountInfo` (
   `userID` tinyint(8) unsigned zerofill NOT NULL auto_increment,
   `userName` varchar(30) collate utf8_unicode_ci NOT NULL,
