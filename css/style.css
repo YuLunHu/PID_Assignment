@@ -37,6 +37,15 @@
         content:'$'; 
     }
 
+    /* Preview */
+    .preview{
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      margin: 0 auto;
+      background: white;
+    }
+
 
 /* :: 3.0 Common/Base CSS */
 * {
