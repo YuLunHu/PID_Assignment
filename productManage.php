@@ -330,11 +330,10 @@ else {
               success: function (response) {
                 Swal.fire("資料已更新！");
                 refreshProduct();
-                $("#myCollapsible").collapse('hide');
+                $("#newsModal").modal('hide');
               },
             });
-
-
+            
           }
         });
       });

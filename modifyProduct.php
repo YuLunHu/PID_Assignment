@@ -8,9 +8,16 @@ $filename = $_FILES['productImageName']['name'];
 
 require_once("connectMysql.php");
 
+if ($filename == "") {
+    $sqlCommand = "UPDATE `product` SET `productName` = '$productName', `unitPrice`= '$unitPrice', 
+    `unitsInStock`= '$unitsInStock' WHERE `productID` = '$productID'";
+}
+else {
+    $sqlCommand = "UPDATE `product` SET `productName` = '$productName', `unitPrice`= '$unitPrice', 
+    `unitsInStock`= '$unitsInStock', `productImageName` = '$filename' WHERE `productID` = '$productID'";
+}
+
 // 將商品資料更新至資料庫
-$sqlCommand = "UPDATE `product` SET `productName` = '$productName', `unitPrice`= '$unitPrice', 
-`unitsInStock`= '$unitsInStock', `productImageName` = '$filename' WHERE `productID` = '$productID'";
 mysqli_query($link, $sqlCommand) or die(mysqli_error($link));
 
 mysqli_close($link);
