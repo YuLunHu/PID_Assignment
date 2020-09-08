@@ -272,6 +272,11 @@ else
 
       }
 
+      // 點擊結帳
+      $("#order").on("click", function () {
+        document.location.href="order.php";
+      });
+
       // 查看購物車
       $("#shoppinpCartMenu").on("click", function () {
 
