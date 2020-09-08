@@ -68,44 +68,28 @@ else
 
   <!--Navbar-->
   <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand h1 mb-0" href="#"></a>
     <!--Cart-->
     <div class="dropdown" style="float: right">
-      <button class="btn btn-cart" btn- type="button" id="dropdownMenuButton" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-cart" btn- type="button" id="shoppinpCartMenu" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="true">
         <i class="fas fa-shopping-cart fa-2x"></i>
-        <span class="badge badge-pill badge-danger">2</span>
+        <span class="badge badge-pill badge-danger" id="numberOfShopping">0</span>
       </button>
       <div class="dropdown-menu dropdown-menu-right" style="min-width: 300px;">
         <div class="px-4 py-3">
           <div class="h6">已選購商品</div>
           <table class="table table-sm">
-            <tr>
-              <td>
-                <a href="#">
-                  <i class="far fa-trash-alt"></i>
-                </a>
-              </td>
-              <td>
-                金牌西裝
-              </td>
-              <td>1 件</td>
-              <td>$ 520</td>
-            </tr>
-            <tr>
-              <td>
-                <a href="#">
-                  <i class="far fa-trash-alt"></i>
-                </a>
-              </td>
-              <td>
-                金牌女裝
-              </td>
-              <td>1 件</td>
-              <td>$ 480</td>
-            </tr>
+            <thead>
+              <tr>
+                <td>品名</td>
+                <td>數量</td>
+                <td>價格</td>
+              </tr>
+            </thead>
+            <tbody id="shoppingCart">
+            </tbody>
           </table>
-          <button class="btn btn-primary btn-block" type="button">
+          <button class="btn btn-primary btn-block" type="button" id="order">
             <i class="fas fa-shopping-cart"></i>
             結帳去
           </button>
@@ -140,34 +124,27 @@ else
         </div>
         <div class="modal-body">
           <form>
-
             <div class="form-group">
               <div class="preview"><img id="selectedImage" src="" width="100" height="100"></div>
             </div>
-
             <div class="form-group">
               <label style="float: left">
                 <span class="glyphicon glyphicon-tag"></span>
                 商品名稱: <h id="productName"></h>
               </label>
-
             </div>
-
             <div class="form-group">
               <label style="float: left">
                 <span class="glyphicon glyphicon-usd"></span>
                 單價: <h id="unitPrice"></h>
               </label>
             </div>
-
             <div class="form-group">
               <label style="float: left">
                 <span class="glyphicon glyphicon-hamburger"></span>
                 數量: <input type="number" id="quantity" value="1" min="1" max="5">
               </label>
             </div>
-
-
           </form>
         </div>
         <div class="modal-footer">
@@ -224,7 +201,7 @@ else
           for (var i = 0; i < productList.length; i++) {
             var ls = productList[i];
             if (ls.productImageName === "") {
-              ImageName = 'default.jpeg';
+              ImageName = 'default.jpeg'; // 若沒有上傳商品圖片會給預設圖片
             }
             else {
               ImageName = ls.productImageName;
@@ -241,24 +218,88 @@ else
 
         // 點按加入購物車
         $("#productResult").on("click", ".shoppingItem", function () {
-          var index = $(this).closest("tr").index();
-          currentIndex = index; // 記錄該項目之索引
 
-          if (productList[currentIndex].productImageName === "") {
-            ImageName = 'default.jpeg';
+          loginOrNot = '<?php echo $nickName ?>';
+          if (loginOrNot == "Guest") {
+            Swal.fire("請先登入");
           }
           else {
-            ImageName = productList[currentIndex].productImageName;
-          }
-          $("#productName").html(productList[currentIndex].productName);
-          $("#unitPrice").html(productList[currentIndex].unitPrice);
-          $("#quantity").attr("max", productList[currentIndex].unitsInStock);
-          $("#selectedImage").attr("src", "img/productImage/" + ImageName);
+            var index = $(this).closest("tr").index();
+            currentIndex = index; // 記錄該項目之索引
 
-          $("#newsModal").modal();
+            if (productList[currentIndex].productImageName === "") {
+              ImageName = 'default.jpeg';
+            }
+            else {
+              ImageName = productList[currentIndex].productImageName;
+            }
+            $("#productName").html(productList[currentIndex].productName);
+            $("#unitPrice").html(productList[currentIndex].unitPrice);
+            $("#quantity").attr("max", productList[currentIndex].unitsInStock);
+            $("#selectedImage").attr("src", "img/productImage/" + ImageName);
+
+            $("#newsModal").modal();
+          }
         });
 
+        $("#shoppingCart").empty();
+        var formData = new FormData();
+        $.ajax({
+          url: 'getShoppingCart.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            let shoppingCartList = JSON.parse(response);
+            if (shoppingCartList.length == 0) {
+              $("#shoppingCart").html('您的購物車內沒有任何商品');
+            }
+            else {
+              $("#numberOfShopping").html(shoppingCartList.length);
+              var result = "";
+              for (var i = 0; i < shoppingCartList.length; i++) {
+                result = '<tr><td>' + shoppingCartList[i].productName +
+                  '</td><td>' + shoppingCartList[i].quantity +
+                  ' 件</td><td><td>$ ' + shoppingCartList[i].unitPrice +
+                  '</td></tr>';
+                $("#shoppingCart").append(result);
+              }
+            }
+          },
+        });
+
+
       }
+
+      // 查看購物車
+      $("#shoppinpCartMenu").on("click", function () {
+
+        $("#shoppingCart").empty();
+        var formData = new FormData();
+
+        $.ajax({
+          url: 'getShoppingCart.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            let shoppingCartList = JSON.parse(response);
+            if (shoppingCartList.length == 0) {
+              $("#shoppingCart").html('您的購物車內沒有任何商品');
+            }
+            var result = "";
+            for (var i = 0; i < shoppingCartList.length; i++) {
+              result = '<tr><td>' + shoppingCartList[i].productName +
+                '</td><td>' + shoppingCartList[i].quantity +
+                ' 件</td><td><td>$ ' + shoppingCartList[i].unitPrice +
+                '</td></tr>';
+              $("#shoppingCart").append(result);
+            }
+          },
+        });
+      });
 
       // 確認加入購物車
       $("#okButton").on("click", function () {
@@ -270,7 +311,6 @@ else
           if (result.value) {
 
             var formData = new FormData();
-
             formData.append('productID', productList[currentIndex].productID);
             formData.append('quantity', $("#quantity").val());
 
@@ -281,7 +321,8 @@ else
               contentType: false,
               processData: false,
               success: function (response) {
-                console.log(response);
+                let numberOfShopping = JSON.parse(response)["count(`productID`)"];
+                $("#numberOfShopping").html(numberOfShopping);
                 Swal.fire("加入購物車成功！");
                 $("#newsModal").modal('hide');
               },
@@ -290,6 +331,8 @@ else
           }
         });
       });
+
+
 
     });
 

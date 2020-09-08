@@ -5,6 +5,7 @@ if (isset($_GET["logout"])) // 判斷是否有收到logout的值
 {
   unset($_SESSION["userName"]); // 若有則代表使用者登出，將session清除
   unset($_SESSION["nickName"]);
+  unset($_SESSION["userID"]);
 
   echo "<script> alert('登出成功，即將為您跳轉回首頁'); window.location='index.php' </script>";
 	exit();
@@ -25,6 +26,7 @@ if (isset($_POST["login"]))
     if ($row['userName'] == $UserName && password_verify($Password, $row['userPassword'])) { // 判斷帳號密碼是否正確
       $_SESSION['userName'] = $UserName; // 將使用者名稱存入session
       $_SESSION['nickName'] = $row['nickName'];
+      $_SESSION['userID'] = $row['userID'];
       echo "<script> alert('登入成功，即將為您跳轉至首頁'); window.location = 'index.php' </script>";
     }
   }

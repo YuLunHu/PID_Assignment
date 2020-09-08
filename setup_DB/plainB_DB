@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS `shoppingCart` (
   `productID` int unsigned zerofill NOT NULL,
   `quantity` int NOT NULL,
 
-  PRIMARY KEY (`userID`, `productID`),
   FOREIGN KEY (`userID`) REFERENCES userAccountInfo(`userID`),
   FOREIGN KEY (`productID`) REFERENCES product(`productID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
@@ -78,3 +77,7 @@ VALUES ('plain-B 1616 百搭神褲 LOKA', '1600', '220', '1616_LOKA.jpg')
 
 UPDATE `product` SET `productName` = 'testttt', `unitPrice`= '666', 
 `unitsInStock`= '66' WHERE `productID` = '0000000050'
+
+SELECT `productName`, `quantity`, `unitPrice` FROM `product` as P , 
+(SELECT `productID`, `quantity` FROM `shoppingCart` WHERE `userID` = '00000009') as S 
+WHERE S.productID = P.productID
