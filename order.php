@@ -132,13 +132,11 @@ else {
           // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
           // let quantityItem = $(".quantityItem");
           // console.log(quantityItem);
-
           // for (var i = 0; i < quantityItem.length; i++) {
           //   console.log(quantityItem[i].val());
           // }
           // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
-          
-          // var formData = new FormData();
+
           let total = 0;
           for (var i = 0; i < shoppingCartList.length; i++) {
             var shoppingData = new FormData();
@@ -148,22 +146,21 @@ else {
             shoppingData.append('shoppingCartID', shoppingCartList[i].shoppingCartID);
             shoppingData.append('quantity', shoppingCartList[i].quantity);
 
-            // console.log(shoppingCartList[i].quantity);
-            // formData.append(i, shoppingData);
-          }
-          shoppingData.append('total', total);
-          // console.log(shoppingData);
+            if (i == (shoppingCartList.length - 1)) {
+              shoppingData.append('total', total);
+            }
 
-          $.ajax({
-            url: 'checkout.php',
-            type: 'POST',
-            data: shoppingData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-              console.log(JSON.parse(response));
-            },
-          });
+            $.ajax({
+              url: 'checkout.php',
+              type: 'POST',
+              data: shoppingData,
+              contentType: false,
+              processData: false,
+              success: function (response) {
+                console.log(JSON.parse(response));
+              },
+            });
+          }
           // document.location.href = "orderDetail.php";
         }
       });

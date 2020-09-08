@@ -3,8 +3,9 @@
 session_start();
 
 $shoppingCartID = $_POST["shoppingCartID"];
+$quantity = $_POST["quantity"];
 
-echo json_encode($shoppingCartID);
+echo json_encode($quantity);
 // require_once("connectMysql.php");
 
 // $sqlCommand = "DELETE FROM `shoppingCart` WHERE `productID` = '$productID'";
