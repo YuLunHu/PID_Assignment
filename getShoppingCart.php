@@ -4,9 +4,9 @@ session_start();
 $userID = $_SESSION["userID"];
 
 require_once("connectMysql.php");
-$sqlCommand = "SELECT `productName`, `quantity`, `unitPrice` FROM `product` as P , 
-(SELECT `productID`, `quantity` FROM `shoppingCart` WHERE `userID` = '$userID') as S 
-WHERE S.productID = P.productID";
+$sqlCommand = "SELECT `shoppingCartID`, `productName`, `quantity`, `unitPrice` FROM `product` as P , 
+(SELECT `shoppingCartID`, `productID`, `quantity` FROM `shoppingCart` WHERE `userID` = '$userID') 
+as S WHERE S.productID = P.productID ORDER BY `shoppingCartID`";
 
 $result = mysqli_query($link, $sqlCommand) or die(mysqli_error($link));
 

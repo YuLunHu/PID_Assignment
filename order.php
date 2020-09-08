@@ -66,7 +66,9 @@ else {
   </header>
 
   <div style="margin: 30px 8px 20px 6px;border-top:1px dotted #C0C0C0;"></div>
-  <div align="center"><h2>購物車清單</h2></div>
+  <div align="center">
+    <h2>購物車清單</h2>
+  </div>
 
 
   <div id="shoppingTable">
@@ -79,7 +81,7 @@ else {
           <th scope="col" style="text-align: center">金額</th>
         </tr>
       </thead>
-      <tbody id="shoppingCarttResult">
+      <tbody id="shoppingCartResult">
       </tbody>
     </table>
   </div>
@@ -101,55 +103,72 @@ else {
       contentType: false,
       processData: false,
       success: function (response) {
-
         shoppingCartList = JSON.parse(response);
-
-        minusButton = '<button class="minusItem glyphicon glyphicon-minus btn btn-info btn-xs"></button>';
-        plusButton = '<button class="plusItem glyphicon glyphicon-plus btn btn-info btn-xs"></button>';
-
         let total = 0;
         for (var i = 0; i < shoppingCartList.length; i++) {
           var amount = shoppingCartList[i].unitPrice * shoppingCartList[i].quantity;
           result = '<tr><td>' + shoppingCartList[i].productName +
             '</td><td style="text-align: center">$ ' + shoppingCartList[i].unitPrice +
-            '</td><td style="text-align: center">' + minusButton + 
-            '<input class="quantityItem" type="text" value="' + shoppingCartList[i].quantity +
-            '" size="3" style="text-align: center">' + 
-            plusButton +
+            '</td><td style="text-align: center">' +
+            '<input class="quantityItem" min="0" style="text-align: center;width:40px;" type="number" value="' +
+            shoppingCartList[i].quantity + '" size="3" style="text-align: center">' +
             '</td><td style="text-align: center">$ ' + amount + '</td></tr>';
-          $("#shoppingCarttResult").append(result);
+          $("#shoppingCartResult").append(result);
           total += amount;
         }
         result = '<tr><td></td><td></td><td style="text-align:right"><font size="3">小計:</font></td><td style="text-align: center"><font size="3">$ ' + total + '</font></td></tr>';
-        $("#shoppingCarttResult").append(result);
+        $("#shoppingCartResult").append(result);
       },
     });
 
     $("#checkout").on("click", function () {
       Swal.fire({
-          title: "提醒",
-          text: "確定要下單了嗎？",
-          showCancelButton: true
-        }).then(function (result) {
-          if (result.value) {
+        title: "提醒",
+        text: "確定要下單了嗎？",
+        showCancelButton: true
+      }).then(function (result) {
+        if (result.value) {
 
-            var formData = new FormData();
-            console.log(shoppingCartList[0].productName);
+          // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
+          // let quantityItem = $(".quantityItem");
+          // console.log(quantityItem);
 
-            // $.ajax({
-            //   url: 'checkout.php',
-            //   type: 'POST',
-            //   data: formData,
-            //   contentType: false,
-            //   processData: false,
-            //   success: function (response) {
-                
-            //   },
-            // });
-            // document.location.href="orderDetail.php";
+
+
+          // for (var i = 0; i < quantityItem.length; i++) {
+          //   console.log(quantityItem[i].val());
+          // }
+          // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
+          
+          var formData = new FormData();
+          let total = 0;
+          for (var i = 0; i < shoppingCartList.length; i++) {
+            var shoppingData = new FormData();
+            var amount = shoppingCartList[i].unitPrice * shoppingCartList[i].quantity;
+            total += amount;
+
+            shoppingData.append('shoppingCartID', shoppingCartList[i].shoppingCartID);
+            shoppingData.append('quantity', shoppingCartList[i].quantity);
+
+            // console.log(shoppingCartList[i].quantity);
+            // formData.append(i, shoppingData);
           }
-        });
-      
+          // console.log(shoppingData);
+
+          // $.ajax({
+          //   url: 'checkout.php',
+          //   type: 'POST',
+          //   data: formData,
+          //   contentType: false,
+          //   processData: false,
+          //   success: function (response) {
+          //     console.log(JSON.parse(response));
+          //   },
+          // });
+          // document.location.href = "orderDetail.php";
+        }
+      });
+
     });
 
 
