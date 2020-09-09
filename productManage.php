@@ -260,7 +260,6 @@ else {
         $("#productResult").on("click", ".deleteItem", function () {
           var index = $(this).closest("tr").index();
           currentIndex = index; // 記錄該項目之索引
-          console.log(currentIndex);
 
           Swal.fire({
             title: "警告！",

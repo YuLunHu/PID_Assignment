@@ -2,15 +2,9 @@
 
 session_start();
 
-$orderID = $_SESSION["orderID"];
+$orderID = $_POST["orderID"];
 
 require_once("connectMysql.php");
-
-// 查出本次明細
-$sqlCommand = "SELECT `orderTime`, `orderAmount` FROM `orders` WHERE `orderID` = '$orderID'";
-$result = mysqli_query($link, $sqlCommand) or die(mysqli_error($link));
-$row = mysqli_fetch_assoc($result);
-$_SESSION["orderTime"] = $row['orderTime'];
 
 // 查出本次購買明細的ID, 商品名稱, 時價和數量
 $sqlCommand = "SELECT P.productID, P.productName, O.currentPrice, O.quantity FROM 
@@ -24,6 +18,5 @@ while($row = mysqli_fetch_assoc($result)) {
 echo json_encode($dataarr);
 
 mysqli_close($link);
-
 
 ?>
