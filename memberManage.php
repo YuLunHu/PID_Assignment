@@ -77,6 +77,7 @@ else {
           <th scope="col" style="text-align: center">nickName</th>
           <th scope="col" style="text-align: center">phoneNumber</th>
           <th scope="col" style="text-align: center">e-mail</th>
+          <th scope="col" style="text-align: center">購物紀錄</th>
         </tr>
       </thead>
       <tbody id="memberResult">
@@ -91,11 +92,9 @@ else {
 
       $("#memberResult").on("click", ".availableBtn", function () {
         var index = $(this).closest("tr").index();
-
         var formData = new FormData();
         formData.append('userID', memberList[index].userID);
         formData.append('status', 1);
-
         $.ajax({
           url: 'updateUserStatus.php',
           type: 'POST',
@@ -110,11 +109,9 @@ else {
 
       $("#memberResult").on("click", ".forbidBtn", function () {
         var index = $(this).closest("tr").index();
-
         var formData = new FormData();
         formData.append('userID', memberList[index].userID);
         formData.append('status', 0);
-
         $.ajax({
           url: 'updateUserStatus.php',
           type: 'POST',
@@ -127,6 +124,11 @@ else {
         });
       });
 
+      $("#memberResult").on("click", ".shoppingHistoryBtn", function () {
+        var index = $(this).closest("tr").index();
+        document.location.href="shoppingHistory.php?id=" + memberList[index].userID;
+      });
+
       function getMemberData() {
         $("#memberResult").empty();
         $.ajax({
@@ -137,8 +139,9 @@ else {
           success: function (response) {
             memberList = JSON.parse(response);
 
-            var availableBtn = '<button class="btn btn-info btn-xs availableBtn">啟用<span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>';
+            var availableBtn = '<button class="btn btn-success btn-xs availableBtn">啟用<span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>';
             var forbidBtn = '<button class="btn btn-danger btn-xs forbidBtn">停用<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
+            var shoppingHistoryBtn = '<button class="btn btn-info btn-xs shoppingHistoryBtn">查看<span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
 
             for (var i = 0; i < memberList.length; i++) {
               if (memberList[i].accountStatus == 0) {
@@ -148,6 +151,7 @@ else {
                   '</td><td style="text-align: center">' + memberList[i].nickName +
                   '</td><td style="text-align: center">' + memberList[i].phoneNumber +
                   '</td><td style="text-align: center">' + memberList[i].email +
+                  '</td><td style="text-align: center">' + shoppingHistoryBtn +
                   '</td><</tr>';
               }
               else {
@@ -157,6 +161,7 @@ else {
                   '</td><td style="text-align: center">' + memberList[i].nickName +
                   '</td><td style="text-align: center">' + memberList[i].phoneNumber +
                   '</td><td style="text-align: center">' + memberList[i].email +
+                  '</td><td style="text-align: center">' + shoppingHistoryBtn +
                   '</td><</tr>';
               }
 

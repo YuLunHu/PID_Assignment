@@ -1,7 +1,13 @@
 <?php
 
 session_start();
-$userID = $_SESSION["userID"];
+
+if (isset($_POST["userID"])) {
+    $userID = $_POST["userID"];
+}
+else {
+    $userID = $_SESSION["userID"];
+}
 
 require_once("connectMysql.php");
 
