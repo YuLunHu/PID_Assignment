@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `userAccountInfo` (
   `nickName` varchar(16) collate utf8_unicode_ci NOT NULL,
   `phoneNumber` varchar(16) collate utf8_unicode_ci NOT NULL,
   `email` varchar(64) collate utf8_unicode_ci NOT NULL,
+  `accountStatus` tinyint(6) unsigned NOT NULL DEFAULT '1',
 
   PRIMARY KEY (`userID`, `userName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
@@ -71,8 +72,6 @@ CREATE TABLE IF NOT EXISTS `ordersDetail` (
   FOREIGN KEY (`productID`) REFERENCES product(`productID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `userAccountInfo` (`userName`, `userPassword`, `nickName`, `phoneNumber`, `email`) 
-VALUES ('peggy123', '12345678', 'passger', '0960725779', 'peggy83920@gmail.com')
 
 INSERT INTO `product` (`productName`, `unitPrice`, `unitsInStock`, `productImageName`) 
 VALUES ('plain-B 1616 百搭神褲 LOKA', '1600', '220', '1616_LOKA.jpg')
@@ -98,3 +97,5 @@ SELECT `productID` FROM `shoppingCart` WHERE `shoppingCartID` = '0000000002'
 
 SELECT P.productID, P.productName, O.currentPrice, O.quantity FROM 
 `product` as P, `ordersDetail` as O where P.productID = O.productID AND O.orderID = '2'
+
+SELECT * FROM `userAccountInfo`

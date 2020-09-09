@@ -54,7 +54,7 @@ else {
           <div class="classynav">
             <ul>
               <li><a href="productManage.php">商品管理</a></li>
-              <li><a href="#">會員管理</a></li>
+              <li><a href="memberManage.php">會員管理</a></li>
             </ul>
             <div class="user-login-info">
               <a href="manageLogin.php?logout=1">登出</a>
