@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 CREATE TABLE IF NOT EXISTS `ordersDetail` (
   `orderID` tinyint(10) unsigned zerofill NOT NULL,
   `productID` int unsigned zerofill NOT NULL,
+  `currentPrice` int NOT NULL,
   `quantity` tinyint(6) NOT NULL,
 
   PRIMARY KEY (`orderID`, `productID`), 
@@ -82,3 +83,18 @@ UPDATE `product` SET `productName` = 'testttt', `unitPrice`= '666',
 SELECT `shoppingCartID`, `productName`, `quantity`, `unitPrice` FROM `product` as P , 
 (SELECT `shoppingCartID`, `productID`, `quantity` FROM `shoppingCart` WHERE `userID` = '00000001') 
 as S WHERE S.productID = P.productID ORDER BY `shoppingCartID`
+
+INSERT INTO `orders` (`userID`, `orderTime`, `orderAmount`) VALUES 
+('00000001', '2020-08-31 17:25:39' ,'123456')
+
+INSERT INTO `ordersDetail` (`productID`, `quantity`) VALUES ('0000000003', '1')
+
+SELECT MAX(`orderID`) AS `lastOrderID`  FROM `orders`
+
+INSERT INTO `ordersDetail` (`orderID`, `productID`, `quantity`) VALUES 
+('0000000001', '0000000003', '123')
+
+SELECT `productID` FROM `shoppingCart` WHERE `shoppingCartID` = '0000000002'
+
+SELECT P.productID, P.productName, O.currentPrice, O.quantity FROM 
+`product` as P, `ordersDetail` as O where P.productID = O.productID AND O.orderID = '2'

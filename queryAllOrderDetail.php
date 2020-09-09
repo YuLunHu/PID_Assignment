@@ -19,7 +19,7 @@ else {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>結帳</title>
+  <title>歷史訂單明細</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -49,15 +49,16 @@ else {
           <div class="classynav">
             <ul>
               <li><a href="index.php">首頁</a></li>
-              <li><?php if ($nickName == "Guest") { ?>
-                <a></a>
-                <?php } else { ?>
-                <a href="queryAllOrderDetail.php">訂單明細</a>
-                <?php } ?></li>
+              <li><a href="register.php">註冊</a></li>
               <li><?php if ($nickName == "Guest") { ?>
                 <a href="login.php">登入</a>
                 <?php } else { ?>
                 <a href="login.php?logout=1">登出</a>
+                <?php } ?></li>
+              <li><?php if ($nickName == "Guest") { ?>
+                <a></a>
+                <?php } else { ?>
+                <a href="queryAllOrderDetail.php">訂單明細</a>
                 <?php } ?></li>
             </ul>
           </div>
@@ -70,22 +71,21 @@ else {
 
   <div style="margin: 30px 8px 20px 6px;border-top:1px dotted #C0C0C0;"></div>
   <div align="center">
-    <h2><?= $nickName ?>, 我們將立即處理您的訂單!</h2>
-    <h3>以下是您本次的訂單明細</h3>
+    <h2><?= $nickName ?>, 這是您的購物紀錄</h2>
   </div>
 
 
-  <div id="shoppingTable">
+
+  <div id="orderTable">
     <table class="table table-striped version_5 href-tr" id="sortTable">
       <thead>
         <tr>
-          <th scope="col">商品名稱</th>
-          <th scope="col" style="text-align: center">單價</th>
-          <th scope="col" style="text-align: center">數量</th>
-          <th scope="col" style="text-align: center">金額</th>
+          <th scope="col" style="text-align: center"></th>
+          <th scope="col" style="text-align: center">訂單時間</th>
+          <th scope="col" style="text-align: center">總金額</th>
         </tr>
       </thead>
-      <tbody id="shoppingCartResult">
+      <tbody id="orderResult">
       </tbody>
     </table>
   </div>
@@ -94,34 +94,34 @@ else {
 
 
   <script>
-
-    let orderDetail = 0;
-    let total = 0;
+      
+      let spreadButton = '<button name="newProduct" id="newProduct" type="button" '+
+      'class="btn btn-success" data-toggle="collapse" data-target="#myCollapsible" '+
+      'aria-expanded="true" aria-controls="myCollapsible">展開<svg width="1em" '+
+      'height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" '+
+      'xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" '+
+      'd="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>' +
+      '<path fill-rule="evenodd"d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 '+
+      '0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg></button>';
 
     $.ajax({
-      url: 'queryOrder.php',
+      url: 'queryAllOrder.php',
       type: 'GET',
       contentType: false,
       processData: false,
       success: function (response) {
-        orderDetail = JSON.parse(response);
+        order = JSON.parse(response);
 
-        for (var i = 0; i < orderDetail.length; i++) {
+        for (var i = 0; i < order.length; i++) {
 
-          var amount = orderDetail[i].currentPrice * orderDetail[i].quantity;
-          total += amount;
+          result = '<tr><td style="text-align: center">'+ spreadButton +
+          '</td><td style="text-align: center">' + order[i].orderTime +
+          '</td><td style="text-align: center">$ ' + order[i].orderAmount +
+          '</td></tr>';
 
-          result = '<tr><td>' + orderDetail[i].productName +
-            '</td><td style="text-align: center">$ ' + orderDetail[i].currentPrice +
-            '</td><td style="text-align: center">' + orderDetail[i].quantity +
-            '</td><td style="text-align: center">$ ' + amount + '</td></tr>';
-          $("#shoppingCartResult").append(result);
+          $("#orderResult").append(result);
           
         }
-
-        result = '<tr><td></td><td></td><td style="text-align:right"><font size="3">小計:</font></td><td style="text-align: center"><font size="3">$ ' + total + '</font></td></tr>';
-        $("#shoppingCartResult").append(result);
-
       },
     });
 

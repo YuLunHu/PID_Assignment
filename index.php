@@ -47,6 +47,11 @@ else
           <div class="classynav">
             <ul>
               <li><a href="index.php">首頁</a></li>
+              <li><?php if ($nickName == "Guest") { ?>
+                <a></a>
+                <?php } else { ?>
+                <a href="queryAllOrderDetail.php">訂單明細</a>
+                <?php } ?></li>
               <li><a href="register.php">註冊</a></li>
               <li><?php if ($nickName == "Guest") { ?>
                 <a href="login.php">登入</a>
@@ -269,12 +274,11 @@ else
           },
         });
 
-
       }
 
       // 點擊結帳
       $("#order").on("click", function () {
-        document.location.href="order.php";
+        document.location.href = "order.php";
       });
 
       // 查看購物車

@@ -50,7 +50,6 @@ else {
           <div class="classynav">
             <ul>
               <li><a href="index.php">首頁</a></li>
-              <li><a href="register.php">註冊</a></li>
               <li><?php if ($nickName == "Guest") { ?>
                 <a href="login.php">登入</a>
                 <?php } else { ?>
@@ -109,9 +108,7 @@ else {
           var amount = shoppingCartList[i].unitPrice * shoppingCartList[i].quantity;
           result = '<tr><td>' + shoppingCartList[i].productName +
             '</td><td style="text-align: center">$ ' + shoppingCartList[i].unitPrice +
-            '</td><td style="text-align: center">' +
-            '<input class="quantityItem" min="0" style="text-align: center;width:40px;" type="number" value="' +
-            shoppingCartList[i].quantity + '" size="3" style="text-align: center">' +
+            '</td><td style="text-align: center">' + shoppingCartList[i].quantity +
             '</td><td style="text-align: center">$ ' + amount + '</td></tr>';
           $("#shoppingCartResult").append(result);
           total += amount;
@@ -122,48 +119,58 @@ else {
     });
 
     $("#checkout").on("click", function () {
-      Swal.fire({
-        title: "提醒",
-        text: "確定要下單了嗎？",
-        showCancelButton: true
-      }).then(function (result) {
-        if (result.value) {
+      if (shoppingCartList.length == 0) {
+        Swal.fire("您的購物車為空的唷～");
+      }
+      else {
+        Swal.fire({
+          title: "提醒",
+          text: "確定要下單了嗎？",
+          showCancelButton: true
+        }).then(function (result) {
+          if (result.value) {
 
-          // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
-          // let quantityItem = $(".quantityItem");
-          // console.log(quantityItem);
-          // for (var i = 0; i < quantityItem.length; i++) {
-          //   console.log(quantityItem[i].val());
-          // }
-          // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
+            // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
+            // let quantityItem = $(".quantityItem");
+            // console.log(quantityItem);
+            // for (var i = 0; i < quantityItem.length; i++) {
+            //   console.log(quantityItem[i].val());
+            // }
+            // －－－－－－－－－－－－－－－－－－－－－－－－調整商品購買數量（測試中）－－－－－－－－－－－－－－－－－－－－－－
 
-          let total = 0;
-          for (var i = 0; i < shoppingCartList.length; i++) {
-            var shoppingData = new FormData();
-            var amount = shoppingCartList[i].unitPrice * shoppingCartList[i].quantity;
-            total += amount;
-
-            shoppingData.append('shoppingCartID', shoppingCartList[i].shoppingCartID);
-            shoppingData.append('quantity', shoppingCartList[i].quantity);
-
-            if (i == (shoppingCartList.length - 1)) {
-              shoppingData.append('total', total);
+            // 計算交易總金額
+            let total = 0;
+            for (var i = 0; i < shoppingCartList.length; i++) {
+              var amount = 0;
+              amount = shoppingCartList[i].unitPrice * shoppingCartList[i].quantity;
+              total += amount;
             }
 
-            $.ajax({
-              url: 'checkout.php',
-              type: 'POST',
-              data: shoppingData,
-              contentType: false,
-              processData: false,
-              success: function (response) {
-                console.log(JSON.parse(response));
-              },
-            });
+            for (var i = 0; i < shoppingCartList.length; i++) {
+              var shoppingData = new FormData();
+              shoppingData.append('shoppingCartID', shoppingCartList[i].shoppingCartID);
+              shoppingData.append('unitPrice', shoppingCartList[i].unitPrice);
+              shoppingData.append('quantity', shoppingCartList[i].quantity);
+
+              if (i == 0) {
+                shoppingData.append('total', total);
+              } // 若是第一次送ajax就把訂單總金額附上去，因為要先Insert到orders才會有orderID，之後幾次只要Insert到orderDetail
+
+              $.ajax({
+                url: 'checkout.php',
+                type: 'POST',
+                data: shoppingData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                },
+              });
+            }
+            document.location.href = "orderDetail.php";
           }
-          // document.location.href = "orderDetail.php";
-        }
-      });
+        });
+      }
+
 
     });
 
