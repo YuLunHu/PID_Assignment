@@ -18,17 +18,25 @@ if (isset($_POST["login"]))
 	if (trim($UserName) != "" && trim($Password) != "") // 去除前後的空白，判斷使用者名稱和密碼是否為空字串
 	{
     require_once("connectMysql.php");
-    $sqlCommand = "SELECT * FROM userAccountInfo where userName = '$UserName'";
+    $sqlCommand = "SELECT * FROM `userAccountInfo` where userName = '$UserName'";
     $result = mysqli_query($link, $sqlCommand);
     $row = mysqli_fetch_assoc($result);
     mysqli_close($link);
+    
+    if ($row['accountStatus']) { // 檢查權限
+      $_SESSION['status'] = $row['accountStatus'];
 
-    if ($row['userName'] == $UserName && password_verify($Password, $row['userPassword'])) { // 判斷帳號密碼是否正確
+      if ($row['userName'] == $UserName && password_verify($Password, $row['userPassword'])) { // 判斷帳號密碼是否正確
       $_SESSION['userName'] = $UserName; // 將使用者名稱存入session
       $_SESSION['nickName'] = $row['nickName'];
       $_SESSION['userID'] = $row['userID'];
       echo "<script> alert('登入成功，即將為您跳轉至首頁'); window.location = 'index.php' </script>";
+      }
     }
+    else {
+      echo "<script> alert('您的帳戶已被停用！') </script>";
+    }
+    
   }
   else {
     echo "<script> alert('帳號或密碼不可為空') </script>";

@@ -71,7 +71,7 @@ else {
     <table class="table table-striped version_5 href-tr" id="sortTable">
       <thead>
         <tr>
-          <th scope="col" style="text-align: center">&nbsp;&nbsp;&nbsp;&nbsp;accountStatus</th>
+          <th scope="col" style="text-align: center">&nbsp;&nbsp;&nbsp;&nbsp;權限管理</th>
           <th scope="col" style="text-align: center">userID</th>
           <th scope="col" style="text-align: center">userName</th>
           <th scope="col" style="text-align: center">nickName</th>
@@ -89,11 +89,46 @@ else {
     $(document).ready(function () {
       getMemberData();
 
-      $("#productResult").on("click", ".availableBtn", function () {
-        
+      $("#memberResult").on("click", ".availableBtn", function () {
+        var index = $(this).closest("tr").index();
+
+        var formData = new FormData();
+        formData.append('userID', memberList[index].userID);
+        formData.append('status', 1);
+
+        $.ajax({
+          url: 'updateUserStatus.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            getMemberData();
+          },
+        });
+      });
+
+      $("#memberResult").on("click", ".forbidBtn", function () {
+        var index = $(this).closest("tr").index();
+
+        var formData = new FormData();
+        formData.append('userID', memberList[index].userID);
+        formData.append('status', 0);
+
+        $.ajax({
+          url: 'updateUserStatus.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            getMemberData();
+          },
+        });
       });
 
       function getMemberData() {
+        $("#memberResult").empty();
         $.ajax({
           url: 'queryAllMember.php',
           type: 'GET',
@@ -102,29 +137,29 @@ else {
           success: function (response) {
             memberList = JSON.parse(response);
 
-            var availableBtn = '<button class="btn btn-info btn-xs availableBtn"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>';
-            var forbidBtn = '<button class="btn btn-danger btn-xs forbidBtn"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
-            
+            var availableBtn = '<button class="btn btn-info btn-xs availableBtn">啟用<span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>';
+            var forbidBtn = '<button class="btn btn-danger btn-xs forbidBtn">停用<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
+
             for (var i = 0; i < memberList.length; i++) {
-              if (memberList[i].accountStatus == 1) {
+              if (memberList[i].accountStatus == 0) {
                 result = '<tr><td style="text-align: center">' + availableBtn +
-                '</td><td style="text-align: center">' + memberList[i].userID +
-                '</td><td style="text-align: center">' + memberList[i].userName +
-                '</td><td style="text-align: center">' + memberList[i].nickName +
-                '</td><td style="text-align: center">' + memberList[i].phoneNumber +
-                '</td><td style="text-align: center">' + memberList[i].email +
-                '</td><</tr>';
+                  '</td><td style="text-align: center">' + memberList[i].userID +
+                  '</td><td style="text-align: center">' + memberList[i].userName +
+                  '</td><td style="text-align: center">' + memberList[i].nickName +
+                  '</td><td style="text-align: center">' + memberList[i].phoneNumber +
+                  '</td><td style="text-align: center">' + memberList[i].email +
+                  '</td><</tr>';
               }
               else {
                 result = '<tr><td style="text-align: center">' + forbidBtn +
-                '</td><td style="text-align: center">' + memberList[i].userID +
-                '</td><td style="text-align: center">' + memberList[i].userName +
-                '</td><td style="text-align: center">' + memberList[i].nickName +
-                '</td><td style="text-align: center">' + memberList[i].phoneNumber +
-                '</td><td style="text-align: center">' + memberList[i].email +
-                '</td><</tr>';
+                  '</td><td style="text-align: center">' + memberList[i].userID +
+                  '</td><td style="text-align: center">' + memberList[i].userName +
+                  '</td><td style="text-align: center">' + memberList[i].nickName +
+                  '</td><td style="text-align: center">' + memberList[i].phoneNumber +
+                  '</td><td style="text-align: center">' + memberList[i].email +
+                  '</td><</tr>';
               }
-              
+
               $("#memberResult").append(result);
             }
             Swal.fire("資料已更新！");

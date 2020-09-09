@@ -99,3 +99,5 @@ SELECT P.productID, P.productName, O.currentPrice, O.quantity FROM
 `product` as P, `ordersDetail` as O where P.productID = O.productID AND O.orderID = '2'
 
 SELECT * FROM `userAccountInfo`
+
+UPDATE `userAccountInfo` SET `accountStatus` = '0' WHERE `userID` = '1'
