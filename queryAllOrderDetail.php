@@ -158,7 +158,7 @@ else {
               '</td><td style="text-align: center">' + order[i].orderTime +
               '</td><td style="text-align: center">$ ' + order[i].orderAmount +
               '</td></tr>';
-            details = '<p class="p' + i +'" style="display:none"></p>';
+            details = '<p class="p' + i +'" style="display:none;text-align: center"></p>';
             $("#orderResult").append(result);
             $("#orderResult").append(details);
           }

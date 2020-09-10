@@ -12,7 +12,8 @@ else {
 require_once("connectMysql.php");
 
 // 查出本次明細
-$sqlCommand = "SELECT `orderID`, `orderTime`, `orderAmount` FROM `orders` WHERE `userID` = '$userID'";
+$sqlCommand = "SELECT `orderID`, `orderTime`, `orderAmount` FROM `orders` WHERE `userID` = '$userID' 
+ORDER BY `orderTime` DESC";
 $result = mysqli_query($link, $sqlCommand) or die(mysqli_error($link));
 
 $dataarr = array();
